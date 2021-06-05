@@ -1,10 +1,14 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import Top from "../components/top/index.vue";
+import Rooms from "../components/rooms/index.vue";
 
-const history = createWebHashHistory();
+const history = createWebHistory();
 
-const routes = [{ path: "/", component: Top }];
+const routes = [
+	{ path: "/rooms", name: "rooms", component: Rooms },
+	{ path: "/", name: "top", component: Top },
+];
 
 const router = createRouter({
 	history,
