@@ -4,18 +4,20 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "target": "esnext",
-    "module": "esnext",
+    // @see {https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping}
+    "lib": ["ES2019", "dom"],
+    "module": "commonjs",
+    "target": "ES2019",
     "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
     "plugins": [{
       "name": "@vuedx/typescript-plugin-vue"
     }],
+    "types": ["vite/client", "@types/jest"],
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 }
