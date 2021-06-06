@@ -1,15 +1,34 @@
 <template>
-  <h1 class="page-title">チャットルーム一覧</h1>
+  <h1>チャットルーム一覧</h1>
+  <ol>
+    <li v-for="room in state.rooms" :key="room.id">
+      {{ room.name }}
+    </li>
+  </ol>
   <router-link :to="{ name: 'top' }">トップ</router-link>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onBeforeMount, reactive } from "vue";
+import { api } from "../../api/index";
+import { Room } from "../../types";
+
+type State = {
+  rooms: Room[];
+};
 
 export default defineComponent({
   name: "Rooms",
   setup() {
-    return;
+    const state = reactive<State>({
+      rooms: [],
+    });
+
+    onBeforeMount(async () => {
+      state.rooms = await api.showRooms();
+    });
+
+    return { state };
   },
 });
 </script>
