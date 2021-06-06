@@ -1,4 +1,4 @@
-import { MOCK_ROOMS_DATA } from "./mock/rooms";
+import { MOCK_ROOMS_DATA } from "@/api/mock/rooms";
 
 export const api = {
   showRooms() {
