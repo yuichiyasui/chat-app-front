@@ -10,8 +10,8 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive } from "vue";
-import { api } from "../../api/index";
-import { Room } from "../../types";
+import { api } from "@/api/index";
+import { Room } from "@/types";
 
 type State = {
   rooms: Room[];
