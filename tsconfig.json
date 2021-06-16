@@ -6,7 +6,7 @@
     },
     // @see {https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping}
     "lib": ["ES2019", "dom"],
-    "module": "commonjs",
+    "module": "esnext",
     "target": "ES2019",
     "moduleResolution": "node",
     "strict": true,
