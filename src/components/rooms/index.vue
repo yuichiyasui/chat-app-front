@@ -31,7 +31,9 @@
 
   <ol>
     <li v-for="room in state.rooms" :key="room.id">
-      {{ room.name }}
+      <router-link :to="{ name: 'room', params: { roomId: room.id } }">
+        {{ room.name }}
+      </router-link>
     </li>
   </ol>
   <router-link :to="{ name: 'top' }">トップ</router-link>
