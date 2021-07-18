@@ -4,3 +4,9 @@ export type Room = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type User = {
+  id: number;
+  name: string;
+  uuid: string;
+};
