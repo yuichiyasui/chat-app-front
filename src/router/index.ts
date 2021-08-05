@@ -9,7 +9,11 @@ const history = createWebHistory();
 
 const routes = [
   { path: "/rooms", name: "rooms", component: Rooms },
-  { path: "/room/:roomId", name: "room", component: Room },
+  {
+    path: "/room/:roomId",
+    name: "room",
+    component: Room,
+  },
   {
     path: "/user-registration",
     name: "user-registration",

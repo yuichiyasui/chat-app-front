@@ -41,4 +41,16 @@ export const api = {
       return Promise.reject(null);
     }
   },
+  async fetchUser(userId: string) {
+    const url = "http://localhost:3500/users";
+    const queryParams = new URLSearchParams({ userId });
+    const response = await fetch(`${url}/?${queryParams}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json;charset=UTF-8",
+      },
+    });
+    const json = await response.json();
+    return json.data;
+  },
 };
