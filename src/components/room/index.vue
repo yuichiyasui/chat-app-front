@@ -22,8 +22,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
-import { useRoute } from "vue-router";
+import { api } from "@/api";
+import { defineComponent, onBeforeMount, reactive } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 type Post = {
   id: number;
@@ -70,6 +72,19 @@ export default defineComponent({
   name: "Room",
   setup() {
     const route = useRoute();
+    const router = useRouter();
+    const store = useStore();
+
+    onBeforeMount(async () => {
+      const userId = localStorage.getItem("USER_ID");
+      if (!userId) return router.push({ name: "user-registration" });
+      if (!store.getters.isUserExist) {
+        const user = await api.fetchUser(userId);
+        user
+          ? store.commit({ type: "set", user })
+          : router.push({ name: "user-registration" });
+      }
+    });
 
     const state = reactive<State>({
       room: { id: route.params.roomId },
