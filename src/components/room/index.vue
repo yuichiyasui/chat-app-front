@@ -27,6 +27,8 @@ import { defineComponent, onBeforeMount, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 
+import ActionCable from "@/lib/actioncable";
+
 type Post = {
   id: number;
   roomId: number;
@@ -70,10 +72,17 @@ const submit = (event: any, form: MessageForm) => {
 
 export default defineComponent({
   name: "Room",
-  setup() {
+  setup(_, context) {
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
+
+    const endpoint = "ws:localhost:3500/cable";
+    const cable = ActionCable.createConsumer(endpoint);
+    cable.subscriptions.create("RoomChannel", {
+      id: route.params.roomId,
+      uuid: store.state.user.uuid,
+    });
 
     onBeforeMount(async () => {
       const userId = localStorage.getItem("USER_ID");
