@@ -2,13 +2,26 @@
   <h1 class="">{{ "チャットルーム:" + state.room.id }}</h1>
   <ol>
     <li v-for="(post, index) in state.posts" :key="`post-${index}`">
-      <p>
-        {{ "ユーザー名:" + post.userId }}
-      </p>
-      <p>{{ post.message }}</p>
+      <div v-if="post.type === 'notification'">
+        <p>
+          {{ post.createdAt }}
+        </p>
+        <p>{{ post.message }}</p>
+      </div>
+      <div v-else-if="post.type === 'message'">
+        <p>
+          {{ post.createdAt }}
+        </p>
+        <p>
+          {{ post.name }}
+        </p>
+        <p>
+          {{ post.message }}
+        </p>
+      </div>
     </li>
   </ol>
-  <form @submit="submit($event, state.form)">
+  <form @submit="submit($event, state.form, state.channel)">
     <textarea
       v-model="state.form.message"
       placeholder="メッセージを入力"
@@ -23,14 +36,17 @@
 
 <script lang="ts">
 import { api } from "@/api";
-import { defineComponent, onBeforeMount, reactive } from "vue";
+import { defineComponent, onBeforeMount, onBeforeUnmount, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { key } from "@/store";
+
+import ActionCable from "@/lib/actioncable";
 
 type Post = {
-  id: number;
-  roomId: number;
-  userId: number;
+  type: "notification" | "message";
+  name?: string;
+  userId?: number;
   message: string;
   createdAt: string;
 };
@@ -43,63 +59,68 @@ type State = {
   room: any;
   posts: Post[];
   form: MessageForm;
+  channel: any;
 };
 
-const MOCK_DATA: Post[] = [
-  {
-    id: 1,
-    roomId: 1,
-    userId: 1,
-    message: "テストテキスト",
-    createdAt: "2021-07-17 00:00:00", // TODO: Rubyのtimestamp型にしたい
-  },
-  {
-    id: 1,
-    roomId: 1,
-    userId: 1,
-    message: "テストテキスト",
-    createdAt: "2021-07-17 00:00:01", // TODO: Rubyのtimestamp型にしたい
-  },
-];
+const checkValidUser = async () => {
+  const router = useRouter();
+  const store = useStore(key);
 
-const submit = (event: any, form: MessageForm) => {
+  const userId = localStorage.getItem("USER_ID");
+  if (!userId) return router.push({ name: "user-registration" });
+  if (store.getters.isUserExist) return Promise.resolve();
+  const user = await api.fetchUser(userId);
+  user
+    ? store.commit({ type: "set", user })
+    : router.push({ name: "user-registration" });
+};
+
+const submit = async (event: any, form: MessageForm, channel: any) => {
   event.preventDefault();
-  console.log("投稿に成功しました。");
+  channel.perform("submit", form);
   form.message = "";
 };
 
 export default defineComponent({
   name: "Room",
-  setup() {
+  setup(_) {
     const route = useRoute();
-    const router = useRouter();
-    const store = useStore();
-
-    onBeforeMount(async () => {
-      const userId = localStorage.getItem("USER_ID");
-      if (!userId) return router.push({ name: "user-registration" });
-      if (!store.getters.isUserExist) {
-        const user = await api.fetchUser(userId);
-        user
-          ? store.commit({ type: "set", user })
-          : router.push({ name: "user-registration" });
-      }
-    });
-
+    const store = useStore(key);
     const state = reactive<State>({
       room: { id: route.params.roomId },
       posts: [],
       form: { message: "" },
+      channel: null,
     });
 
-    // TODO: コネクションのsubscribeの処理を入れる
+    onBeforeMount(async () => {
+      await checkValidUser();
 
-    // TODO: ルーム情報, 投稿一覧のデータフェッチの処理を入れる
-    state.posts = MOCK_DATA;
+      const endpoint = "ws:localhost:3500/cable";
+      const cable = ActionCable.createConsumer(endpoint);
+      state.channel = cable.subscriptions.create(
+        {
+          channel: "RoomChannel",
+          id: route.params.roomId,
+          uuid: store.state.user.user?.uuid,
+        },
+        {
+          connected() {
+            console.log("connected.");
+          },
+          received(data: Post) {
+            state.posts.push(data);
+          },
+          disconnected() {
+            console.log("disconnected.");
+          },
+        }
+      );
+    });
 
-    // onBeforeUnmount(()=> {
-    //     // TODO: コネクションのunsubscribeの処理を入れる
-    // })
+    onBeforeUnmount(() => {
+      state.channel.unsubscribe();
+    });
 
     return { state, submit };
   },
