@@ -6,7 +6,7 @@
       <ol class="mb-10">
         <template v-if="state.isFetchingRooms">
           <li
-            v-for="i in 2"
+            v-for="i in 5"
             :key="`fake-room-${i}`"
             class="animate-pulse mb-4 last:mb-0"
           >
@@ -65,32 +65,62 @@
       </router-link>
     </div>
 
-    <div
-      v-if="state.isShowCreateRoomModal"
-      @click.self="closeCreateRoomModal"
-      class="overlay"
-    >
-      <section class="create-room-modal">
-        <h2 class="create-room-modal_title">ルームを作成する</h2>
-        <form @submit.prevent="createRoom" class="create-room-modal_form">
-          <label class="create-room-modal_form_label">
-            <p class="create-room-modal_form_name">ルーム名</p>
-            <div class="create-room-modal_form_container">
-              <input
-                type="text"
-                name="name"
-                v-model="state.form.name"
-                required
-                class="create-room-modal_form_input"
-              />
-            </div>
-          </label>
-          <button type="submit" class="create-room-modal_form_submit-button">
-            作成
-          </button>
-        </form>
-      </section>
-    </div>
+    <transition name="modal">
+      <div
+        v-show="state.isShowCreateRoomModal"
+        @click.self="closeCreateRoomModal"
+        class="overlay"
+      >
+        <section class="modal rounded table bg-white py-16 px-24">
+          <h2 class="text-2xl font-bold text-center mb-5">ルームを作成する</h2>
+          <form @submit="createRoom">
+            <label class="table mb-4">
+              <p class="text-lg text-center mb-3">ルーム名</p>
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  v-model="state.form.name"
+                  placeholder="雑談部屋"
+                  required
+                  maxlength="10"
+                  class="
+                    input
+                    ring-2 ring-gray-300
+                    rounded
+                    w-full
+                    block
+                    focus:outline-none focus:ring-2 focus:ring-blue-600
+                    mb-4
+                    py-2
+                    px-4
+                    text-center
+                  "
+                />
+                <small class="block text-center">※ 10文字以内</small>
+              </div>
+            </label>
+            <button
+              type="submit"
+              class="
+                table
+                mx-auto
+                bg-green-500
+                text-white
+                font-bold
+                rounded-md
+                px-8
+                py-4
+                hover:bg-opacity-80
+                shadow-sm
+              "
+            >
+              作成
+            </button>
+          </form>
+        </section>
+      </div>
+    </transition>
   </main>
 </template>
 
@@ -124,7 +154,8 @@ export default defineComponent({
       state.isShowCreateRoomModal = false;
     };
 
-    const createRoom = async () => {
+    const createRoom = async (e: Event) => {
+      e.preventDefault();
       try {
         await api.createRoom(state.form.name);
         closeCreateRoomModal();
@@ -150,6 +181,27 @@ export default defineComponent({
 <style lang="scss" scoped>
 $overlayZIndex: 10;
 
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.5s;
+
+  .modal {
+    transition: opacity 0.5s 0.2s, transform 0.5s 0.2s;
+  }
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+  transition: opacity 0.5s 0.5s;
+
+  .modal {
+    transform: translateY(-40px);
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.5s;
+  }
+}
+
 .overlay {
   position: fixed;
   z-index: $overlayZIndex;
@@ -161,22 +213,5 @@ $overlayZIndex: 10;
   display: grid;
   justify-items: center;
   align-content: center;
-}
-
-.create-room-modal {
-  background-color: #ffffff;
-  width: fit-content;
-  height: fit-content;
-  padding: 60px 100px;
-}
-
-.create-room-modal_form_label {
-  display: block;
-  margin-bottom: 20px;
-}
-
-.create-room-modal_form_input {
-  width: 100%;
-  line-height: 1.8;
 }
 </style>
