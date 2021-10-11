@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Top from "@/components/top/index.vue";
-import Rooms from "@/components/rooms/index.vue";
-import Room from "@/components/room/index.vue";
-import UserRegistration from "@/components/user-registration/index.vue";
+import Top from "@/pages/top/index.vue";
+import Rooms from "@/pages/rooms/index.vue";
+import Room from "@/pages/room/index.vue";
+import UserRegistration from "@/pages/user-registration/index.vue";
 
 const history = createWebHistory();
 
