@@ -13,30 +13,21 @@
       <br />
       チャットアプリケーション
     </p>
-    <router-link
-      :to="{ name: 'rooms' }"
-      class="
-        table
-        mx-auto
-        bg-blue-500
-        text-white
-        font-bold
-        rounded-md
-        px-8
-        py-4
-        hover:bg-opacity-80
-        shadow-sm
-      "
-    >
+    <Button :to="{ name: 'rooms' }" color="blue" class="mx-auto">
       チャットを始める
-    </router-link>
+    </Button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
+import Button from "@/components/button/index.vue";
+
 export default defineComponent({
   name: "Top",
+  components: {
+    Button,
+  },
 });
 </script>

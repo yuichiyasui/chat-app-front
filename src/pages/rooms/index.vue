@@ -28,41 +28,12 @@
           </li>
         </template>
       </ol>
-      <button
-        class="
-          table
-          mx-auto
-          bg-blue-500
-          text-white
-          font-bold
-          rounded-md
-          px-8
-          py-4
-          hover:bg-opacity-80
-          shadow-sm
-          mb-5
-        "
-        @click="openCreateRoomModal"
-      >
+      <Button class="mx-auto mb-5" @click="openCreateRoomModal">
         ルームを作成
-      </button>
-      <router-link
-        :to="{ name: 'top' }"
-        class="
-          table
-          mx-auto
-          bg-green-500
-          text-white
-          font-bold
-          rounded-md
-          px-8
-          py-4
-          hover:bg-opacity-80
-          shadow-sm
-        "
-      >
+      </Button>
+      <Button :to="{ name: 'top' }" color="green" class="mx-auto">
         トップに戻る
-      </router-link>
+      </Button>
     </div>
 
     <transition name="modal">
@@ -100,23 +71,7 @@
                 <small class="block text-center">※ 10文字以内</small>
               </div>
             </label>
-            <button
-              type="submit"
-              class="
-                table
-                mx-auto
-                bg-green-500
-                text-white
-                font-bold
-                rounded-md
-                px-8
-                py-4
-                hover:bg-opacity-80
-                shadow-sm
-              "
-            >
-              作成
-            </button>
+            <Button type="submit" color="green" class="mx-auto">作成</Button>
           </form>
         </section>
       </div>
@@ -129,6 +84,8 @@ import { defineComponent, onBeforeMount, reactive } from "vue";
 import { api } from "@/api/index";
 import { Room } from "@/types";
 
+import Button from "@/components/button/index.vue";
+
 type State = {
   rooms: Room[];
   form: { name: string };
@@ -138,6 +95,9 @@ type State = {
 
 export default defineComponent({
   name: "Rooms",
+  components: {
+    Button,
+  },
   setup() {
     const state = reactive<State>({
       rooms: [],
