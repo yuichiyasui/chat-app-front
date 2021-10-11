@@ -1,11 +1,13 @@
 <template>
   <header class="sticky top-0 shadow bg-green-500 p-4 grid grid-cols-3 gap-x-4">
     <div />
-    <component
-      :is="isTop ? 'h1' : 'p'"
-      class="text-2xl font-bold text-white text-center"
-    >
-      <component :is="isTop ? 'span' : 'router-link'" :to="{ name: 'top' }">
+    <component :is="isTop ? 'h1' : 'p'" class="text-center">
+      <component
+        :is="isTop ? 'span' : 'router-link'"
+        :to="{ name: 'top' }"
+        class="text-2xl font-bold text-white"
+        :class="{ 'hover:text-gray-200': !isTop }"
+      >
         Chat App
       </component>
     </component>
