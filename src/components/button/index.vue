@@ -10,7 +10,7 @@ export default defineComponent({
     },
     color: {
       type: String,
-      default: "blue",
+      default: "bg-blue-500",
     },
   },
   setup(props) {
@@ -23,7 +23,7 @@ export default defineComponent({
       "py-4",
       "hover:bg-opacity-80",
       "shadow-sm",
-      `bg-${props.color}-500`,
+      props.color,
     ];
 
     return { props, classNames };

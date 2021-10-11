@@ -31,7 +31,7 @@
       <Button class="mx-auto mb-5" @click="openCreateRoomModal">
         ルームを作成
       </Button>
-      <Button :to="{ name: 'top' }" color="green" class="mx-auto">
+      <Button :to="{ name: 'top' }" color="bg-green-500" class="mx-auto">
         トップに戻る
       </Button>
     </div>
@@ -71,7 +71,9 @@
                 <small class="block text-center">※ 10文字以内</small>
               </div>
             </label>
-            <Button type="submit" color="green" class="mx-auto">作成</Button>
+            <Button type="submit" color="bg-green-500" class="mx-auto">
+              作成
+            </Button>
           </form>
         </section>
       </div>

@@ -4,7 +4,7 @@
     <img
       width="500"
       height="500"
-      src="src/assets/img/chat.png"
+      src="/src/assets/img/chat.png"
       alt="チャットイメージ"
       class="mx-auto"
     />
@@ -13,7 +13,7 @@
       <br />
       チャットアプリケーション
     </p>
-    <Button :to="{ name: 'rooms' }" color="blue" class="mx-auto">
+    <Button :to="{ name: 'rooms' }" color="bg-blue-500" class="mx-auto">
       チャットを始める
     </Button>
   </div>
