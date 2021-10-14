@@ -1,52 +1,96 @@
 <template>
-  <h1 class="">{{ "チャットルーム:" + state.room.id }}</h1>
-  <ol>
-    <li v-for="(post, index) in state.posts" :key="`post-${index}`">
-      <div v-if="post.type === 'notification'">
-        <p>
-          {{ post.createdAt }}
-        </p>
-        <p>{{ post.message }}</p>
-      </div>
-      <div v-else-if="post.type === 'message'">
-        <p>
-          {{ post.createdAt }}
-        </p>
-        <p>
-          {{ post.name }}
-        </p>
-        <p>
-          {{ post.message }}
-        </p>
-      </div>
-    </li>
-  </ol>
-  <form @submit="submit($event, state.form, state.channel)">
-    <textarea
-      v-model="state.form.message"
-      placeholder="メッセージを入力"
-      name="message"
-      cols="30"
-      rows="10"
-    ></textarea>
-    <button type="submit">送信</button>
-  </form>
-  <router-link :to="{ name: 'rooms' }">ルーム一覧</router-link>
+  <main>
+    <div class="bg-white mx-auto mt-20 py-16 px-20 w-6/12 rounded-lg shadow-sm">
+      <h1 class="text-2xl font-bold text-center mb-5">
+        {{ "チャットルーム:" + state.room.id }}
+      </h1>
+      <ol class="mb-10">
+        <li
+          v-for="(post, index) in displayPosts"
+          :key="`post-${index}`"
+          class="mb-4 last:mb-0"
+        >
+          <div
+            v-if="post.type === 'notification'"
+            class="max-w-sm rounded-lg bg-gray-200 text-center mx-auto p-2"
+          >
+            <p>
+              {{ post.createdAt }}
+            </p>
+            <p>{{ post.message }}</p>
+          </div>
+          <div v-else-if="post.type === 'message'">
+            <p
+              class="text-sm text-gray-500 font-semibold mb-2"
+              :class="{ 'text-right': post.isSelf }"
+            >
+              {{ post.name }}
+            </p>
+            <p
+              class="table rounded-lg max-w-full shadow p-2 mb-2"
+              :class="{ 'ml-auto': post.isSelf }"
+            >
+              {{ post.message }}
+            </p>
+            <p
+              class="text-sm text-gray-500"
+              :class="{ 'text-right': post.isSelf }"
+            >
+              {{ post.createdAt }}
+            </p>
+          </div>
+        </li>
+      </ol>
+      <form @submit="submit($event, state.form, state.channel)" class="mb-10">
+        <textarea
+          v-model="state.form.message"
+          placeholder="メッセージを入力"
+          name="message"
+          cols="30"
+          rows="10"
+          required
+          class="
+            mb-4
+            input
+            ring-2 ring-gray-300
+            rounded
+            w-full
+            py-2
+            px-4
+            focus:outline-none focus:ring-2 focus:ring-blue-600
+          "
+        ></textarea>
+        <Button type="submit" class="mx-auto">送信</Button>
+      </form>
+      <Button :to="{ name: 'rooms' }" color="bg-green-500" class="mx-auto">
+        ルーム一覧
+      </Button>
+    </div>
+  </main>
 </template>
 
 <script lang="ts">
 import { api } from "@/api";
-import { defineComponent, onBeforeMount, onBeforeUnmount, reactive } from "vue";
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onBeforeUnmount,
+  reactive,
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { key } from "@/store";
 
 import ActionCable from "@/lib/actioncable";
 
+import Button from "@/components/button/index.vue";
+
 type Post = {
   type: "notification" | "message";
   name?: string;
   userId?: number;
+  isSelf?: boolean;
   message: string;
   createdAt: string;
 };
@@ -83,6 +127,9 @@ const submit = async (event: any, form: MessageForm, channel: any) => {
 
 export default defineComponent({
   name: "Room",
+  components: {
+    Button,
+  },
   setup(_) {
     const route = useRoute();
     const store = useStore(key);
@@ -122,7 +169,16 @@ export default defineComponent({
       state.channel.unsubscribe();
     });
 
-    return { state, submit };
+    const displayPosts = computed(() => {
+      return state.posts.map((post) => {
+        if (post.type === "message") {
+          post.isSelf = post.userId === store.state.user.user?.id;
+        }
+        return post;
+      });
+    });
+
+    return { state, displayPosts, submit };
   },
 });
 </script>
