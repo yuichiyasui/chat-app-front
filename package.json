@@ -5,6 +5,7 @@
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
     "test": "jest src",
+    "format": "prettier -w src/*.{ts,vue} && prettier -w src/**/*.{ts,vue}",
     "lint": "eslint --fix src/*.{ts,vue} && eslint --fix src/**/*.{ts,vue}"
   },
   "dependencies": {
