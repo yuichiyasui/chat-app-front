@@ -4,6 +4,7 @@ import Top from "@/pages/top/index.vue";
 import Rooms from "@/pages/rooms/index.vue";
 import Room from "@/pages/room/index.vue";
 import UserRegistration from "@/pages/user-registration/index.vue";
+import NotFound from "@/pages/not-found/index.vue";
 
 const history = createWebHistory();
 
@@ -20,6 +21,7 @@ const routes = [
     component: UserRegistration,
   },
   { path: "/", name: "top", component: Top },
+  { path: "/:pathMatch(.*)*", name: "not-found", component: NotFound },
 ];
 
 const router = createRouter({
