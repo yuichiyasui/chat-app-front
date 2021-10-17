@@ -83,6 +83,7 @@ import { useStore } from "vuex";
 import { key } from "@/store";
 
 import ActionCable from "@/lib/actioncable";
+import dayjs from "@/lib/dayjs";
 
 import Button from "@/components/button/index.vue";
 
@@ -171,6 +172,7 @@ export default defineComponent({
 
     const displayPosts = computed(() => {
       return state.posts.map((post) => {
+        post.createdAt = dayjs(post.createdAt).format("YYYY-MM-DD hh:mm:ss");
         if (post.type === "message") {
           post.isSelf = post.userId === store.state.user.user?.id;
         }
