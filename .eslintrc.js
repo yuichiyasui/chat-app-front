@@ -3,7 +3,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:vue/vue3-recommended",
     "@vue/typescript",
-    "plugin:prettier/recommended",
+    "prettier",
   ],
   env: {
     node: true,
@@ -12,4 +12,4 @@ module.exports = {
     "vue/html-self-closing": "off", // <div />のように単独で完結する要素を制限しない
     "no-unused-vars": "warn",
   },
-};
+}
