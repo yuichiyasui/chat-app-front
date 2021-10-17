@@ -9,7 +9,7 @@
             v-model="state.form.name"
             type="text"
             name="name"
-            maxlength="8"
+            :maxlength="8"
             required
             class="
               input

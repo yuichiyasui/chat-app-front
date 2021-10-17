@@ -54,7 +54,7 @@
                   name="name"
                   placeholder="雑談部屋"
                   required
-                  maxlength="10"
+                  :maxlength="10"
                   class="
                     input
                     ring-2 ring-gray-300
