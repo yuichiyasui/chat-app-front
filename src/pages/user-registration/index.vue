@@ -1,14 +1,14 @@
 <template>
   <div class="bg-white mx-auto mt-20 py-16 px-20 w-max rounded-lg shadow-sm">
     <h1 class="text-2xl font-bold text-center mb-5">ユーザー登録</h1>
-    <form @submit="submit($event, state)" class="mb-5">
+    <form class="mb-5" @submit="submit($event, state)">
       <label class="table mx-auto mb-4">
         <p class="text-lg text-center mb-3">ユーザー名</p>
         <div>
           <input
+            v-model="state.form.name"
             type="text"
             name="name"
-            v-model="state.form.name"
             maxlength="8"
             required
             class="
