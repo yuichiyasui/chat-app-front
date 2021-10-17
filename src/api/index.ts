@@ -12,6 +12,17 @@ export const api = {
     const json = await response.json();
     return json.data;
   },
+  async fetchRoom(id: number): Promise<Room> {
+    const url = `http://localhost:3500/rooms/${id}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json;charset=UTF-8",
+      },
+    });
+    const json = await response.json();
+    return json.data;
+  },
   async createRoom(name: string): Promise<void> {
     const url = "http://localhost:3500/rooms";
     await fetch(url, {
@@ -43,8 +54,7 @@ export const api = {
   },
   async fetchUser(userId: string) {
     const url = "http://localhost:3500/users";
-    const queryParams = new URLSearchParams({ userId });
-    const response = await fetch(`${url}/?${queryParams}`, {
+    const response = await fetch(`${url}/${userId}`, {
       method: "GET",
       headers: {
         "content-type": "application/json;charset=UTF-8",
