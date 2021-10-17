@@ -2,7 +2,7 @@
   <main>
     <div class="bg-white mx-auto mt-20 py-16 px-20 w-6/12 rounded-lg shadow-sm">
       <h1 class="text-2xl font-bold text-center mb-5">
-        {{ "チャットルーム:" + state.room.id }}
+        {{ state.room?.name || "チャットルーム名" }}
       </h1>
       <ol class="mb-10">
         <li
@@ -82,6 +82,8 @@ import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { key } from "@/store";
 
+import { Room } from "@/types";
+
 import ActionCable from "@/lib/actioncable";
 import dayjs from "@/lib/dayjs";
 
@@ -101,10 +103,10 @@ type MessageForm = {
 };
 
 type State = {
-  room: any;
+  room: Room | null;
   posts: Post[];
   form: MessageForm;
-  channel: any;
+  channel: ActionCable.Channel | null;
 };
 
 const checkValidUser = async () => {
@@ -135,7 +137,7 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore(key);
     const state = reactive<State>({
-      room: { id: route.params.roomId },
+      room: null,
       posts: [],
       form: { message: "" },
       channel: null,
@@ -143,6 +145,7 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       await checkValidUser();
+      state.room = await api.fetchRoom(Number(route.params.roomId));
 
       const endpoint = "ws:localhost:3500/cable";
       const cable = ActionCable.createConsumer(endpoint);
@@ -153,21 +156,15 @@ export default defineComponent({
           uuid: store.state.user.user?.uuid,
         },
         {
-          connected() {
-            console.log("connected.");
-          },
           received(data: Post) {
             state.posts.push(data);
-          },
-          disconnected() {
-            console.log("disconnected.");
           },
         }
       );
     });
 
     onBeforeUnmount(() => {
-      state.channel.unsubscribe();
+      state.channel?.unsubscribe();
     });
 
     const displayPosts = computed(() => {
