@@ -39,8 +39,8 @@
     <transition name="modal">
       <div
         v-show="state.isShowCreateRoomModal"
-        @click.self="closeCreateRoomModal"
         class="overlay"
+        @click.self="closeCreateRoomModal"
       >
         <section class="modal rounded table bg-white py-16 px-24">
           <h2 class="text-2xl font-bold text-center mb-5">ルームを作成する</h2>
@@ -49,9 +49,9 @@
               <p class="text-lg text-center mb-3">ルーム名</p>
               <div>
                 <input
+                  v-model="state.form.name"
                   type="text"
                   name="name"
-                  v-model="state.form.name"
                   placeholder="雑談部屋"
                   required
                   maxlength="10"

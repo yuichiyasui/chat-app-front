@@ -53,13 +53,13 @@
           </div>
         </li>
       </ol>
-      <form @submit="submit($event, state.form, state.channel)" class="mb-10">
+      <form class="mb-10" @submit="submit($event, state.form, state.channel)">
         <textarea
+          ref="inputMessageRef"
           v-model="state.form.message"
           placeholder="メッセージを入力"
           name="message"
           required
-          ref="inputMessageRef"
           class="
             mb-4
             input
@@ -142,7 +142,7 @@ export default defineComponent({
   components: {
     Button,
   },
-  setup(_) {
+  setup() {
     const route = useRoute();
     const store = useStore(key);
     const state = reactive<State>({
@@ -158,7 +158,7 @@ export default defineComponent({
     watch(
       () => state.form.message,
       () => {
-        if (inputMessageRef && inputMessageRef.value) {
+        if (inputMessageRef?.value) {
           inputMessageRef.value.style.height = "auto";
           inputMessageRef.value.style.height =
             inputMessageRef.value.scrollHeight + "px";
@@ -183,7 +183,7 @@ export default defineComponent({
             state.posts.push(data);
 
             nextTick(() => {
-              if (messageListRef && messageListRef.value) {
+              if (messageListRef?.value) {
                 messageListRef.value.scrollTop =
                   messageListRef.value.scrollHeight;
               }
