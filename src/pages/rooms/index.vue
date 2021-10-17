@@ -71,9 +71,7 @@
                 <small class="block text-center">※ 10文字以内</small>
               </div>
             </label>
-            <Button type="submit" color="bg-green-500" class="mx-auto">
-              作成
-            </Button>
+            <Button type="submit" class="mx-auto">作成</Button>
           </form>
         </section>
       </div>
