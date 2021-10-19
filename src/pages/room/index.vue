@@ -125,16 +125,17 @@ type State = {
 };
 
 const checkValidUser = async () => {
-  const router = useRouter();
   const store = useStore(key);
 
   const userId = localStorage.getItem("USER_ID");
-  if (!userId) return router.push({ name: "user-registration" });
-  if (store.getters.isUserExist) return Promise.resolve();
+  if (!userId) return false;
+  if (store.getters.isUserExist) return true;
   const user = await api.fetchUser(userId);
-  user
-    ? store.commit({ type: "set", user })
-    : router.push({ name: "user-registration" });
+  if (user) {
+    store.commit({ type: "set", user });
+    return true;
+  }
+  return false;
 };
 
 export default defineComponent({
@@ -143,6 +144,7 @@ export default defineComponent({
     Button,
   },
   setup() {
+    const router = useRouter();
     const route = useRoute();
     const store = useStore(key);
     const state = reactive<State>({
@@ -167,8 +169,12 @@ export default defineComponent({
     );
 
     onBeforeMount(async () => {
-      await checkValidUser();
-      state.room = await api.fetchRoom(Number(route.params.roomId));
+      const roomId = route.params.roomId;
+      const isValidUser = await checkValidUser();
+      if (!isValidUser) {
+        return router.push({ name: "user-registration" });
+      }
+      state.room = await api.fetchRoom(Number(roomId));
 
       const endpoint = "ws:localhost:3500/cable";
       const cable = ActionCable.createConsumer(endpoint);
