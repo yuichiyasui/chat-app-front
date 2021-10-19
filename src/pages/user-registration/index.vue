@@ -50,6 +50,7 @@ import { defineComponent, reactive } from "vue";
 import { api } from "@/api/index";
 
 import Button from "@/components/button/index.vue";
+import { useRouter } from "vue-router";
 
 type State = {
   form: UserForm;
@@ -61,19 +62,6 @@ type UserForm = {
   name: string;
 };
 
-const submit = async (event: Event, state: State) => {
-  event.preventDefault();
-  state.isSubmiting = true;
-  const user = await api.registerUser(state.form.name);
-  if (user) {
-    localStorage.setItem("USER_ID", user.uuid);
-    state.form.name = "";
-  } else {
-    state.hasError = true;
-  }
-  state.isSubmiting = false;
-};
-
 // localstorageにユーザーIDがない場合だけこのページに遷移できる
 export default defineComponent({
   name: "UserRegistration",
@@ -81,11 +69,26 @@ export default defineComponent({
     Button,
   },
   setup() {
+    const router = useRouter();
     const state = reactive<State>({
       form: { name: "" },
       isSubmiting: false,
       hasError: false,
     });
+
+    const submit = async (event: Event, state: State) => {
+      event.preventDefault();
+      state.isSubmiting = true;
+      const user = await api.registerUser(state.form.name);
+      if (user) {
+        localStorage.setItem("USER_ID", user.uuid);
+        state.form.name = "";
+      } else {
+        state.hasError = true;
+      }
+      state.isSubmiting = false;
+      router.back();
+    };
 
     return { state, submit };
   },

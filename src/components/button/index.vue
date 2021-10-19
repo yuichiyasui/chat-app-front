@@ -1,11 +1,12 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
+import { RouteLocationRaw } from "vue-router";
 
 export default defineComponent({
   name: "Button",
   props: {
     to: {
-      type: Object,
+      type: Object as PropType<RouteLocationRaw | null>,
       default: null,
     },
     color: {

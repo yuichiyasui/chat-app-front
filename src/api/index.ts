@@ -1,66 +1,44 @@
 import { Room, User } from "@/types";
+import fetch from "@/utils/fetch";
 
 export const api = {
   async showRooms(): Promise<Room[]> {
-    const url = "http://localhost:3500/rooms";
-    const response = await fetch(url, {
+    const response = await fetch("/rooms", {
       method: "GET",
-      headers: {
-        "content-type": "application/json;charset=UTF-8",
-      },
     });
-    const json = await response.json();
-    return json.data;
+    const json: { data: Room[] } = await response.json();
+
+    return json.data || [];
   },
-  async fetchRoom(id: number): Promise<Room> {
-    const url = `http://localhost:3500/rooms/${id}`;
-    const response = await fetch(url, {
+  async fetchRoom(id: number): Promise<Room | null> {
+    const response = await fetch(`/rooms/${id}`, {
       method: "GET",
-      headers: {
-        "content-type": "application/json;charset=UTF-8",
-      },
     });
-    const json = await response.json();
-    return json.data;
+    const json: { data: Room } = await response.json();
+
+    return json.data || null;
   },
   async createRoom(name: string): Promise<void> {
-    const url = "http://localhost:3500/rooms";
-    await fetch(url, {
+    await fetch("/rooms", {
       method: "POST",
-      headers: {
-        "content-type": "application/json;charset=UTF-8",
-      },
       body: JSON.stringify({ name }),
     });
   },
   async registerUser(name: string): Promise<User | null> {
-    const url = "http://localhost:3500/users";
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json;charset=UTF-8",
-        },
-        body: JSON.stringify({ name }),
-      });
-      const json = await response.json();
-      console.log("ユーザー登録に成功しました。");
-      return json.data;
-    } catch (error) {
-      console.log("ユーザー登録に失敗しました。");
-      console.error(error);
-      return Promise.reject(null);
-    }
-  },
-  async fetchUser(userId: string) {
-    const url = "http://localhost:3500/users";
-    const response = await fetch(`${url}/${userId}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json;charset=UTF-8",
-      },
+    const response = await fetch("/users", {
+      method: "POST",
+      body: JSON.stringify({ name }),
     });
-    const json = await response.json();
-    return json.data;
+    const json: { data: User } = await response.json();
+
+    return json.data || null;
+  },
+  async fetchUser(userId: string): Promise<User | null> {
+    const response = await fetch(`/users/${userId}`, {
+      method: "GET",
+    });
+    const json: { data: User } = await response.json();
+
+    return json.data || null;
   },
 };
