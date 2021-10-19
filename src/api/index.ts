@@ -6,7 +6,7 @@ export const api = {
     const response = await fetch("/rooms", {
       method: "GET",
     });
-    const json = await response.json<{ data: Room[] }>();
+    const json: { data: Room[] } = await response.json();
 
     return json.data || [];
   },
@@ -14,7 +14,7 @@ export const api = {
     const response = await fetch(`/rooms/${id}`, {
       method: "GET",
     });
-    const json = await response.json<{ data: Room }>();
+    const json: { data: Room } = await response.json();
 
     return json.data || null;
   },
@@ -29,7 +29,7 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ name }),
     });
-    const json = await response.json<{ data: User }>();
+    const json: { data: User } = await response.json();
 
     return json.data || null;
   },
@@ -37,7 +37,7 @@ export const api = {
     const response = await fetch(`/users/${userId}`, {
       method: "GET",
     });
-    const json = await response.json<{ data: User }>();
+    const json: { data: User } = await response.json();
 
     return json.data || null;
   },
