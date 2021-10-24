@@ -1,49 +1,3 @@
-<template>
-  <div class="bg-white mx-auto mt-20 py-16 px-20 w-max rounded-lg shadow-sm">
-    <h1 class="text-2xl font-bold text-center mb-5">ユーザー登録</h1>
-    <form class="mb-5" @submit="submit($event, state)">
-      <label class="table mx-auto mb-4">
-        <p class="text-lg text-center mb-3">ユーザー名</p>
-        <div>
-          <input
-            v-model="state.form.name"
-            type="text"
-            name="name"
-            :maxlength="8"
-            required
-            class="
-              input
-              ring-2 ring-gray-300
-              rounded
-              w-full
-              block
-              focus:outline-none focus:ring-2 focus:ring-blue-600
-              mb-4
-              py-2
-              px-4
-              text-center
-            "
-          />
-        </div>
-        <small class="block text-center">
-          ※ ユーザー名は8文字以内で登録可能です。
-        </small>
-      </label>
-      <Button type="submit" :disabled="state.isSubmiting" class="mx-auto">
-        登録
-      </Button>
-    </form>
-    <p v-if="state.hasError" class="text-red-500 text-center mb-5">
-      何らかのエラーが発生しました。
-      <br />
-      リロードして再度登録を行うか、時間を置いて再度お試しください。
-    </p>
-    <Button :to="{ name: 'rooms' }" color="bg-green-500" class="mx-auto">
-      ルーム一覧
-    </Button>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 
@@ -94,3 +48,49 @@ export default defineComponent({
   },
 });
 </script>
+
+<template>
+  <div class="bg-white mx-auto mt-20 py-16 px-20 w-max rounded-lg shadow-sm">
+    <h1 class="text-2xl font-bold text-center mb-5">ユーザー登録</h1>
+    <form class="mb-5" @submit="submit($event, state)">
+      <label class="table mx-auto mb-4">
+        <p class="text-lg text-center mb-3">ユーザー名</p>
+        <div>
+          <input
+            v-model="state.form.name"
+            type="text"
+            name="name"
+            :maxlength="8"
+            required
+            class="
+              input
+              ring-2 ring-gray-300
+              rounded
+              w-full
+              block
+              focus:outline-none focus:ring-2 focus:ring-blue-600
+              mb-4
+              py-2
+              px-4
+              text-center
+            "
+          />
+        </div>
+        <small class="block text-center">
+          ※ ユーザー名は8文字以内で登録可能です。
+        </small>
+      </label>
+      <Button type="submit" :disabled="state.isSubmiting" class="mx-auto">
+        登録
+      </Button>
+    </form>
+    <p v-if="state.hasError" class="text-red-500 text-center mb-5">
+      何らかのエラーが発生しました。
+      <br />
+      リロードして再度登録を行うか、時間を置いて再度お試しください。
+    </p>
+    <Button :to="{ name: 'rooms' }" color="bg-green-500" class="mx-auto">
+      ルーム一覧
+    </Button>
+  </div>
+</template>

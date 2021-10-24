@@ -1,3 +1,16 @@
+<script lang="ts">
+import { defineComponent } from "vue";
+
+import Button from "@/components/button/index.vue";
+
+export default defineComponent({
+  name: "Top",
+  components: {
+    Button,
+  },
+});
+</script>
+
 <template>
   <div class="bg-white mx-auto mt-20 py-16 px-20 w-max rounded-lg shadow-sm">
     <!-- イラスト：Loose Drawing https://loosedrawing.com/illust/0309/ -->
@@ -18,16 +31,3 @@
     </Button>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-import Button from "@/components/button/index.vue";
-
-export default defineComponent({
-  name: "Top",
-  components: {
-    Button,
-  },
-});
-</script>
