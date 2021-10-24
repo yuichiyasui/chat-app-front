@@ -38,7 +38,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="postcss">
 body {
   min-height: 100vh;
   @apply bg-gray-100;
