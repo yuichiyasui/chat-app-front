@@ -1,3 +1,62 @@
+<script lang="ts">
+import { defineComponent, onBeforeMount, reactive } from "vue";
+import { api } from "@/api/index";
+import { Room } from "@/types";
+
+import Button from "@/components/button/index.vue";
+
+type State = {
+  rooms: Room[];
+  form: { name: string };
+  isShowCreateRoomModal: boolean;
+  isFetchingRooms: boolean;
+};
+
+export default defineComponent({
+  name: "Rooms",
+  components: {
+    Button,
+  },
+  setup() {
+    const state = reactive<State>({
+      rooms: [],
+      form: { name: "" },
+      isShowCreateRoomModal: false,
+      isFetchingRooms: true,
+    });
+
+    const openCreateRoomModal = () => {
+      state.isShowCreateRoomModal = true;
+    };
+
+    const closeCreateRoomModal = () => {
+      state.isShowCreateRoomModal = false;
+    };
+
+    const createRoom = async (e: Event) => {
+      e.preventDefault();
+      try {
+        await api.createRoom(state.form.name);
+        closeCreateRoomModal();
+        state.form.name = "";
+        state.rooms = await api.showRooms();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    onBeforeMount(async () => {
+      state.rooms = await api.showRooms();
+      setTimeout(() => {
+        state.isFetchingRooms = false;
+      }, 1000);
+    });
+
+    return { state, openCreateRoomModal, closeCreateRoomModal, createRoom };
+  },
+});
+</script>
+
 <template>
   <main>
     <div class="bg-white mx-auto mt-20 py-16 px-20 w-max rounded-lg shadow-sm">
@@ -78,65 +137,6 @@
     </transition>
   </main>
 </template>
-
-<script lang="ts">
-import { defineComponent, onBeforeMount, reactive } from "vue";
-import { api } from "@/api/index";
-import { Room } from "@/types";
-
-import Button from "@/components/button/index.vue";
-
-type State = {
-  rooms: Room[];
-  form: { name: string };
-  isShowCreateRoomModal: boolean;
-  isFetchingRooms: boolean;
-};
-
-export default defineComponent({
-  name: "Rooms",
-  components: {
-    Button,
-  },
-  setup() {
-    const state = reactive<State>({
-      rooms: [],
-      form: { name: "" },
-      isShowCreateRoomModal: false,
-      isFetchingRooms: true,
-    });
-
-    const openCreateRoomModal = () => {
-      state.isShowCreateRoomModal = true;
-    };
-
-    const closeCreateRoomModal = () => {
-      state.isShowCreateRoomModal = false;
-    };
-
-    const createRoom = async (e: Event) => {
-      e.preventDefault();
-      try {
-        await api.createRoom(state.form.name);
-        closeCreateRoomModal();
-        state.form.name = "";
-        state.rooms = await api.showRooms();
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    onBeforeMount(async () => {
-      state.rooms = await api.showRooms();
-      setTimeout(() => {
-        state.isFetchingRooms = false;
-      }, 1000);
-    });
-
-    return { state, openCreateRoomModal, closeCreateRoomModal, createRoom };
-  },
-});
-</script>
 
 <style lang="scss" scoped>
 $overlayZIndex: 10;
