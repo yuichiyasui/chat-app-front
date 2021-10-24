@@ -1,86 +1,3 @@
-<template>
-  <main>
-    <div class="bg-white mx-auto mt-20 py-16 px-20 w-6/12 rounded-lg shadow-sm">
-      <h1 class="text-2xl font-bold text-center mb-5">
-        {{ state.room?.name || "チャットルーム名" }}
-      </h1>
-      <ol
-        ref="messageListRef"
-        class="message-list overflow-y-scroll max-h-96 mb-5"
-      >
-        <li
-          v-for="(post, index) in displayPosts"
-          :key="`post-${index}`"
-          class="mb-4 last:mb-0"
-        >
-          <div
-            v-if="post.type === 'notification'"
-            class="max-w-sm rounded-lg bg-gray-200 text-center mx-auto p-2"
-          >
-            <p>
-              {{ post.createdAt }}
-            </p>
-            <p>{{ post.message }}</p>
-          </div>
-          <div v-else-if="post.type === 'message'">
-            <p
-              v-if="!post.isSelf"
-              class="text-sm text-gray-500 font-semibold mb-2"
-              :class="{ 'text-right': post.isSelf }"
-            >
-              {{ post.name }}
-            </p>
-            <p
-              class="
-                whitespace-pre-line
-                table
-                rounded-lg
-                max-w-full
-                shadow
-                p-2
-                mb-2
-              "
-              :class="{ 'ml-auto': post.isSelf }"
-            >
-              {{ post.message }}
-            </p>
-            <p
-              class="text-sm text-gray-500"
-              :class="{ 'text-right': post.isSelf }"
-            >
-              {{ post.createdAt }}
-            </p>
-          </div>
-        </li>
-      </ol>
-      <form class="mb-10" @submit="submit($event, state.form, state.channel)">
-        <textarea
-          ref="inputMessageRef"
-          v-model="state.form.message"
-          placeholder="メッセージを入力"
-          name="message"
-          required
-          class="
-            mb-4
-            input
-            ring-2 ring-gray-300
-            rounded
-            w-full
-            py-2
-            px-4
-            resize-none
-            focus:outline-none focus:ring-2 focus:ring-blue-600
-          "
-        ></textarea>
-        <Button type="submit" class="mx-auto">送信</Button>
-      </form>
-      <Button :to="{ name: 'rooms' }" color="bg-green-500" class="mx-auto">
-        ルーム一覧
-      </Button>
-    </div>
-  </main>
-</template>
-
 <script lang="ts">
 import { api } from "@/api";
 import {
@@ -227,6 +144,89 @@ export default defineComponent({
   },
 });
 </script>
+
+<template>
+  <main>
+    <div class="bg-white mx-auto mt-20 py-16 px-20 w-6/12 rounded-lg shadow-sm">
+      <h1 class="text-2xl font-bold text-center mb-5">
+        {{ state.room?.name || "チャットルーム名" }}
+      </h1>
+      <ol
+        ref="messageListRef"
+        class="message-list overflow-y-scroll max-h-96 mb-5"
+      >
+        <li
+          v-for="(post, index) in displayPosts"
+          :key="`post-${index}`"
+          class="mb-4 last:mb-0"
+        >
+          <div
+            v-if="post.type === 'notification'"
+            class="max-w-sm rounded-lg bg-gray-200 text-center mx-auto p-2"
+          >
+            <p>
+              {{ post.createdAt }}
+            </p>
+            <p>{{ post.message }}</p>
+          </div>
+          <div v-else-if="post.type === 'message'">
+            <p
+              v-if="!post.isSelf"
+              class="text-sm text-gray-500 font-semibold mb-2"
+              :class="{ 'text-right': post.isSelf }"
+            >
+              {{ post.name }}
+            </p>
+            <p
+              class="
+                whitespace-pre-line
+                table
+                rounded-lg
+                max-w-full
+                shadow
+                p-2
+                mb-2
+              "
+              :class="{ 'ml-auto': post.isSelf }"
+            >
+              {{ post.message }}
+            </p>
+            <p
+              class="text-sm text-gray-500"
+              :class="{ 'text-right': post.isSelf }"
+            >
+              {{ post.createdAt }}
+            </p>
+          </div>
+        </li>
+      </ol>
+      <form class="mb-10" @submit="submit($event, state.form, state.channel)">
+        <textarea
+          ref="inputMessageRef"
+          v-model="state.form.message"
+          placeholder="メッセージを入力"
+          name="message"
+          required
+          class="
+            mb-4
+            input
+            ring-2 ring-gray-300
+            rounded
+            w-full
+            py-2
+            px-4
+            resize-none
+            focus:outline-none focus:ring-2 focus:ring-blue-600
+          "
+        ></textarea>
+        <Button type="submit" class="mx-auto">送信</Button>
+      </form>
+      <Button :to="{ name: 'rooms' }" color="bg-green-500" class="mx-auto">
+        ルーム一覧
+      </Button>
+    </div>
+  </main>
+</template>
 
 <style lang="scss" scoped>
 /* Chrome, Safari 対応 */
