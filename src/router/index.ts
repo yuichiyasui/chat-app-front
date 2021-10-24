@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 import Top from "@/pages/top/index.vue";
 import Rooms from "@/pages/rooms/index.vue";
@@ -8,7 +8,7 @@ import NotFound from "@/pages/not-found/index.vue";
 
 const history = createWebHistory();
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   { path: "/rooms", name: "rooms", component: Rooms },
   {
     path: "/room/:roomId",
