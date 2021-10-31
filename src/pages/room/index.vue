@@ -20,6 +20,7 @@ import ActionCable from "@/lib/actioncable";
 import dayjs from "@/lib/dayjs";
 
 import Button from "@/components/button/index.vue";
+import { USER_MUTATION } from "@/store/mutation-types";
 
 type Post = {
   type: "notification" | "message";
@@ -46,10 +47,10 @@ const checkValidUser = async () => {
 
   const userId = localStorage.getItem("USER_ID");
   if (!userId) return false;
-  if (store.getters.isUserExist) return true;
+  if (store.getters["user/isUserExist"]) return true;
   const user = await api.fetchUser(userId);
   if (user) {
-    store.commit({ type: "set", user });
+    store.commit({ type: `user/${USER_MUTATION.SET}`, user });
     return true;
   }
   return false;

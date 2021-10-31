@@ -1,10 +1,11 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 
-import { api } from "@/api/index";
-
 import Button from "@/components/button/index.vue";
 import { useRouter } from "vue-router";
+import { key } from "@/store";
+import { useStore } from "vuex";
+import { USER_ACTION } from "@/store/action-types";
 
 type State = {
   form: UserForm;
@@ -24,6 +25,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
+    const store = useStore(key);
     const state = reactive<State>({
       form: { name: "" },
       isSubmiting: false,
@@ -33,7 +35,8 @@ export default defineComponent({
     const submit = async (event: Event, state: State) => {
       event.preventDefault();
       state.isSubmiting = true;
-      const user = await api.registerUser(state.form.name);
+      await store.dispatch(`user/${USER_ACTION.REGISTER}`, state.form.name);
+      const user = store.state.user.user;
       if (user) {
         localStorage.setItem("USER_ID", user.uuid);
         state.form.name = "";

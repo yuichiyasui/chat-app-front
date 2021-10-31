@@ -1,4 +1,4 @@
-import { ActionContext } from "vuex";
+import { ActionContext, Module } from "vuex";
 
 import { api } from "@/api";
 import { RootState } from "@/store";
@@ -11,7 +11,8 @@ export type UserState = {
   user: User | null;
 };
 
-const user = {
+const user: Module<UserState, RootState> = {
+  namespaced: true,
   state(): UserState {
     return { user: null };
   },
@@ -26,6 +27,13 @@ const user = {
       userId: string
     ) {
       const user = await api.fetchUser(userId);
+      if (user) commit({ type: USER_MUTATION.SET, user });
+    },
+    async [USER_ACTION.REGISTER](
+      { commit }: ActionContext<UserState, RootState>,
+      name: string
+    ) {
+      const user = await api.registerUser(name);
       if (user) commit({ type: USER_MUTATION.SET, user });
     },
   },
