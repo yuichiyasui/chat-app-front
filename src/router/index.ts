@@ -11,25 +11,34 @@ import NotFound from "@/pages/not-found/index.vue";
 
 const history = createWebHistory();
 
+const checkRegisteredUser = async (): Promise<boolean> => {
+  const userId = localStorage.getItem("USER_ID");
+  if (!userId) return false;
+  if (store.getters["user/isUserExist"]) return true;
+  await store.dispatch(`user/${USER_ACTION.FETCH}`, userId);
+  if (store.getters["user/isUserExist"]) return true;
+
+  return false;
+};
+
 const routes: RouteRecordRaw[] = [
   { path: "/rooms", name: "rooms", component: Rooms },
   {
     path: "/room/:roomId",
     name: "room",
     component: Room,
+    beforeEnter: async () => {
+      const isRegistered = await checkRegisteredUser();
+      return isRegistered || { name: "user-registration" };
+    },
   },
   {
     path: "/user-registration",
     name: "user-registration",
     component: UserRegistration,
     beforeEnter: async () => {
-      const userId = localStorage.getItem("USER_ID");
-      if (!userId) return true;
-      if (store.getters["user/isUserExist"]) return false;
-      await store.dispatch(`user/${USER_ACTION.FETCH}`, userId);
-      if (store.getters["user/isUserExist"]) return false;
-
-      return true;
+      const isRegistered = await checkRegisteredUser();
+      return !isRegistered;
     },
   },
   { path: "/", name: "top", component: Top },

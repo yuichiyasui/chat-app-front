@@ -10,7 +10,7 @@ import {
   nextTick,
   watch,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { key } from "@/store";
 
@@ -20,7 +20,6 @@ import ActionCable from "@/lib/actioncable";
 import dayjs from "@/lib/dayjs";
 
 import Button from "@/components/button/index.vue";
-import { USER_MUTATION } from "@/store/mutation-types";
 
 type Post = {
   type: "notification" | "message";
@@ -42,27 +41,12 @@ type State = {
   channel: ActionCable.Channel | null;
 };
 
-const checkValidUser = async () => {
-  const store = useStore(key);
-
-  const userId = localStorage.getItem("USER_ID");
-  if (!userId) return false;
-  if (store.getters["user/isUserExist"]) return true;
-  const user = await api.fetchUser(userId);
-  if (user) {
-    store.commit({ type: `user/${USER_MUTATION.SET}`, user });
-    return true;
-  }
-  return false;
-};
-
 export default defineComponent({
   name: "Room",
   components: {
     Button,
   },
   setup() {
-    const router = useRouter();
     const route = useRoute();
     const store = useStore(key);
     const state = reactive<State>({
@@ -88,10 +72,6 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       const roomId = route.params.roomId;
-      const isValidUser = await checkValidUser();
-      if (!isValidUser) {
-        return router.push({ name: "user-registration" });
-      }
       state.room = await api.fetchRoom(Number(roomId));
 
       const endpoint = "ws:localhost:3500/cable";
