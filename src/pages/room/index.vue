@@ -191,13 +191,13 @@ export default defineComponent({
           class="
             mb-4
             input
-            ring-2 ring-gray-300
+            border-2 border-gray-300
             rounded
             w-full
             py-2
             px-4
             resize-none
-            focus:outline-none focus:ring-2 focus:ring-blue-600
+            focus:outline-none focus:border-2 focus:border-blue-600
           "
         ></textarea>
         <Button type="submit" class="mx-auto">送信</Button>
