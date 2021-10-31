@@ -74,7 +74,7 @@ export default defineComponent({
       const roomId = route.params.roomId;
       state.room = await api.fetchRoom(Number(roomId));
 
-      const endpoint = "ws:localhost:3500/cable";
+      const endpoint = import.meta.env.VITE_API_CABLE_URL;
       const cable = ActionCable.createConsumer(endpoint);
       state.channel = cable.subscriptions.create(
         {
