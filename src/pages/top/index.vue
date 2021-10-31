@@ -12,7 +12,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="bg-white mx-auto mt-20 py-16 px-20 w-max rounded-lg shadow-sm">
+  <div class="bg-white mx-auto my-20 py-16 px-20 w-max rounded-lg shadow-sm">
     <!-- イラスト：Loose Drawing https://loosedrawing.com/illust/0309/ -->
     <img
       width="500"
