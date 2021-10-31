@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "serve": "vite preview",
+    "serve": "vite preview --port 3000",
     "test:unit": "jest",
     "format": "prettier src/*.{ts,vue} src/**/*.{ts,vue}",
     "lint": "eslint src/*.{ts,vue} src/**/*.{ts,vue}"
